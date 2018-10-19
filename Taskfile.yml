@@ -1,0 +1,30 @@
+# github.com/go-task/task
+
+version: '2'
+
+tasks:
+  build-rc:
+    cmds:
+      - docker build -t adgear/git-tags-resource:{{.VERSION}} .
+      - docker push adgear/git-tags-resource:{{.VERSION}}
+      - echo "adgear/git-tags-resource:{{.VERSION}}" >> .cleanup
+    vars:
+      VERSION: {sh: date +%s}
+  cleanup:
+    cmds:
+      - for i in $(cat .cleanup); do docker rmi $i; done
+  ensure:
+    cmds:
+      - dep ensure
+  test:
+    deps: [ensure]
+    cmds:
+      - go test $(go list ./... | grep -v mocks) -cover -v
+  build:
+    deps: [ensure]
+    cmds:
+      - go build -ldflags "-X main.version=`cat VERSION`" .
+  mockgen:
+    cmds:
+      - for i in check in out; do mockgen -source=actions/$i.go -destination=mocks/mock_$i.go --package=mocks; done
+      - mockgen -source=services/gitTagsService.go -destination=mocks/mock_gts.go --package=mocks

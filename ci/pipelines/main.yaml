@@ -1,0 +1,70 @@
+# instance:       concourse.int.adgear.com
+# pipeline_name:  git-tags-resource
+# team:           sre
+
+resource_types:
+  - name: pull-request
+    type: docker-image
+    source:
+      repository: jtarchie/pr
+
+resources:
+  - name: git-tags-resource
+    type: docker-image
+    source:
+      repository: adgear/git-tags-resource
+      username: ((dockerhub.username))
+      password: ((dockerhub.password))
+      
+  - name: git-tags-resource-repo
+    type: git
+    source:
+      uri: git@github.com:adgear/git-tags-resource.git
+      branch: master
+      tag_filter: "*.*.*"
+      private_key: ((adgear-concourse.ssh_private_key))
+
+  - name: git-tags-resource-pr
+    type: pull-request
+    source:
+      only_mergeable: true
+      uri: git@github.com:adgear/git-tags-resource.git
+      access_token: ((adgear-concourse.access_token))
+      private_key: ((adgear-concourse.ssh_private_key))
+      repo: adgear/git-tags-resource
+      base: master
+      label: ready-to-test
+      ci_skip: true
+
+jobs:
+  - name: test-pr
+    plan:
+    - get: git-tags-resource-pr
+      trigger: true
+    - put: git-tags-resource-pr
+      params:
+        path: git-tags-resource-pr
+        status: pending
+    - task: test
+      file: git-tags-resource-pr/ci/tasks/test.yml
+      on_failure:
+        put: git-tags-resource-pr
+        params:
+          path: git-tags-resource-pr
+          status: failure
+      on_success:
+        put: git-tags-resource-pr
+        params:
+          path: git-tags-resource-pr
+          status: success
+          comment: coverage/tests.results
+
+  - name: build-master
+    plan:
+    - get: git-tags-resource-repo
+      trigger: true
+    - put: git-tags-resource
+      params:
+        build: git-tags-resource-repo
+        tag: git-tags-resource-repo/VERSION
+        tag_as_latest: true
