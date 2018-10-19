@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e              # Willexit immediate if command exits with non-zero status
+set -u              # Will print message if variable not set,
+set -o pipefail     # Fail on a pipline like cmd1 | cmd2 | cmd3, rather then wait
+# set -x
+
+exec 3>&1           # Make stdout available as fd 3 for the result
+exec 1>&2           # Redirect all output to stderr for logging
+
+export TMPDIR=${TMPDIR:-/tmp}
+
+payload=$TMPDIR/git-tags-resource
+cat > $payload <&0
+
+output=$(cat $payload | git-tags-resource --action check)
+
+jq -n "$output" >&3

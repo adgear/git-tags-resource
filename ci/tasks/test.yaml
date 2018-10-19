@@ -1,0 +1,31 @@
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: golang
+    tag: 1.10.3-alpine3.7
+inputs:
+- name: git-tags-resource-pr
+outputs:
+- name: coverage
+run:
+  path: sh
+  args:
+    - -c
+    - |
+      #!/bin/bash
+      set -e
+      
+      apk add --no-cache --no-progress git
+      go get -u github.com/golang/dep/cmd/dep
+      go get -u -v github.com/go-task/task/cmd/task
+
+      mkdir -p /go/src/github.com/adgear/git-tags-resource/
+      cp -pr git-tags-resource-pr/* /go/src/github.com/adgear/git-tags-resource/.
+      test_path="$(pwd)/coverage"
+      cd /go/src/github.com/adgear/git-tags-resource/
+      echo "\`\`\`console" > $test_path/tests.results
+      task test >> $test_path/tests.results
+      echo -n "\`\`\`" >> $test_path/tests.results
+
+      cat $test_path/tests.results
