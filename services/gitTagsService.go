@@ -22,7 +22,6 @@ type GitTagsService interface {
 	CloneRef(uri string, destination string, version string) error
 	CheckoutATag(destination string, version string) (map[string]string, error)
 	CheckoutLWTag(destination string, version string) (map[string]string, error)
-	// DownloadRelease(destination string, repoName string, version string) (map[string]string, error)
 }
 
 type gitTagsService struct {
@@ -78,22 +77,6 @@ func (g gitTagsService) CloneRef(uri string, destination string, version string)
 		})
 	}
 
-	// if err == git.ErrRepositoryAlreadyExists {
-	// 	utils.RemoveContents(destination)
-	// 	_, err := git.PlainClone(destination, false, &git.CloneOptions{
-	// 		URL:               uri,
-	// 		RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
-	// 		ReferenceName:     refName,
-	// 		Tags:              git.AllTags,
-	// 	})
-
-	// 	if err != nil {
-	// 		utils.HandleError(err)
-	// 		return err
-	// 	}
-
-	// } else
-
 	if err != nil {
 		utils.HandleError(err)
 		return err
@@ -101,48 +84,6 @@ func (g gitTagsService) CloneRef(uri string, destination string, version string)
 
 	return nil
 }
-
-// func (g gitTagsService) DownloadRelease(destination string, repoName string, version string) (map[string]string, error) {
-// 	repoParts := strings.Split(repoName, "/")
-
-// 	releaseURL, _, err := g.githubClient.Repositories.GetArchiveLink(context.Background(), repoParts[0], repoParts[1], "tarball", &github.RepositoryContentGetOptions{
-// 		Ref: version,
-// 	})
-
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	out, err := ioutil.TempFile("/tmp", version+".tar.gz")
-
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	defer out.Close()
-
-// 	resp, err := http.Get(releaseURL.String())
-
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	defer resp.Body.Close()
-
-// 	_, err = io.Copy(out, resp.Body)
-
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	err = extractReleaseTarball(out, destination)
-
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	return nil, nil
-// }
 
 func (g gitTagsService) CheckoutLWTag(destination string, version string) (map[string]string, error) {
 	var info map[string]string

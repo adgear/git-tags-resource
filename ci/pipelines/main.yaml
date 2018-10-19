@@ -21,8 +21,7 @@ resources:
     source:
       uri: git@github.com:adgear/git-tags-resource.git
       branch: master
-      ignore_paths:
-      - "*.md"
+      tag_filter: "*.*.*"
       private_key: ((adgear-concourse.ssh_private_key))
 
   - name: git-tags-resource-pr
