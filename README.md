@@ -5,6 +5,7 @@ Tracks github git tags (Annotated or Lightweight) regardless of the branch.
 ## IMPORTANT
 
 **Be aware that this resource only supports tags in line with [Semver](https://semver.org/)**
+**All non-semver tags will be dropped/ignored**
 
 ```yaml
 resource_types:
