@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"path/filepath"
-	"regexp"
 
 	"github.com/Masterminds/semver"
 )
@@ -48,18 +47,15 @@ func ConvertMatchingToSemver(tagList []string, tagFilter string) ([]semver.Versi
 	tagListSemver := []semver.Version{}
 
 	for _, v := range tagList {
-		match, err := regexp.MatchString("^"+tagFilter+"$", v)
-		if err != nil {
+		ver, err := semver.NewVersion(v)
+
+		if err != nil && err != semver.ErrInvalidSemVer {
 			return nil, err
+		} else if err == semver.ErrInvalidSemVer {
+			continue
 		}
 
-		if match {
-			ver, err := semver.NewVersion(v)
-			if err != nil {
-				return nil, err
-			}
-			tagListSemver = append(tagListSemver, *ver)
-		}
+		tagListSemver = append(tagListSemver, *ver)
 	}
 
 	return tagListSemver, nil

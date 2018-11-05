@@ -77,9 +77,17 @@ func (cr checkResource) Execute(source utils.Source) (string, error) {
 
 		s, err := utils.ConvertMatchingToSemver(tagList, source.TagFilter)
 
+		if err != nil {
+			return "", err
+		}
+
 		sort.Sort(utils.ByVersion(s))
 
 		latestOnly, err := strconv.ParseBool(source.LatestOnly)
+
+		if err != nil {
+			return "", err
+		}
 
 		refs, err = cr.GTS.ExtractTags(latestOnly, s)
 
