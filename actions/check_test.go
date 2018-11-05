@@ -4,6 +4,8 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/Masterminds/semver"
+
 	"github.com/adgear/git-tags-resource/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,6 +35,26 @@ func TestCheckPublic_latest(t *testing.T) {
 	assert.Equal(t, output, o, "they should be equal")
 
 	assert.NoError(t, err)
+}
+
+func TestCheckPublic_invalidSemver(t *testing.T) {
+	setup(t)
+
+	source := utils.Source{
+		RepositoryName: "concourse/concourse",
+		URI:            "https://github.com/concourse/concourse.git",
+		TagFilter:      "*.*.*",
+		LatestOnly:     "false",
+	}
+	v, _ := semver.NewVersion("4.2.1")
+	output := []semver.Version{
+		*v,
+	}
+	tagList := []string{"4.0.0MEH", "4.2.1"}
+	tagListSemver, err := utils.ConvertMatchingToSemver(tagList, source.TagFilter)
+
+	assert.NoError(t, err)
+	assert.Equal(t, output, tagListSemver)
 }
 
 func TestCheckPublic_all(t *testing.T) {
