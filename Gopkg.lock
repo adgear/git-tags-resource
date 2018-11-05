@@ -33,24 +33,6 @@
   version = "v1.1.1"
 
 [[projects]]
-  name = "github.com/golang/protobuf"
-  packages = ["proto"]
-  revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
-  version = "v1.2.0"
-
-[[projects]]
-  name = "github.com/google/go-github"
-  packages = ["github"]
-  revision = "f55b50f38167644bb7e4be03d9a2bde71d435239"
-  version = "v18.2.0"
-
-[[projects]]
-  name = "github.com/google/go-querystring"
-  packages = ["query"]
-  revision = "44c6ddd0a2342c386950e880b658017258da92fc"
-  version = "v1.0.0"
-
-[[projects]]
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
   revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
@@ -166,20 +148,8 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
-  packages = [
-    "context",
-    "context/ctxhttp"
-  ]
+  packages = ["context"]
   revision = "04a2e542c03f1d053ab3e4d6e5abcd4b66e2be8e"
-
-[[projects]]
-  branch = "master"
-  name = "golang.org/x/oauth2"
-  packages = [
-    ".",
-    "internal"
-  ]
-  revision = "9dcd33a902f40452422c2367fefcb95b54f9f8f8"
 
 [[projects]]
   branch = "master"
@@ -202,20 +172,6 @@
   ]
   revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
   version = "v0.3.0"
-
-[[projects]]
-  name = "google.golang.org/appengine"
-  packages = [
-    "internal",
-    "internal/base",
-    "internal/datastore",
-    "internal/log",
-    "internal/remote_api",
-    "internal/urlfetch",
-    "urlfetch"
-  ]
-  revision = "ae0ab99deb4dc413a2b4bd6c8bdd0eb67f1e4d06"
-  version = "v1.2.0"
 
 [[projects]]
   name = "gopkg.in/src-d/go-billy.v4"
@@ -285,6 +241,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "772e521f31ac73ac264926a22eec6a19cf679b9fdcf2ced708ceef5c4cc8bfca"
+  inputs-digest = "d1d623946a502e31712e1ceb32b841e5e24465e864a5383bed60f1ffc45a4266"
   solver-name = "gps-cdcl"
   solver-version = 1
