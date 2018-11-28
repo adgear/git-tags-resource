@@ -75,6 +75,8 @@ func (cr checkResource) Execute(source utils.Source) (string, error) {
 			return "", nil
 		}
 
+		sort.Strings(tagList)
+
 		s, err := utils.ConvertMatchingToSemver(tagList, source.TagFilter)
 
 		if err != nil {
