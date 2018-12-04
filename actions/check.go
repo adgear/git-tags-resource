@@ -4,6 +4,7 @@ package actions
 
 import (
 	"encoding/json"
+	"errors"
 	"sort"
 	"strconv"
 	"strings"
@@ -97,11 +98,7 @@ func (cr checkResource) Execute(source utils.Source) (string, error) {
 			return "", err
 		}
 	} else {
-		refs = []map[string]string{
-			map[string]string{
-				"msg": msg,
-			},
-		}
+		return "", errors.New(msg)
 	}
 
 	output, err := json.Marshal(refs)
