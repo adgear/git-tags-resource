@@ -104,7 +104,7 @@ func (cr checkResource) Execute(source utils.Source) (string, error) {
 	output, err := json.Marshal(refs)
 
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	return string(output), nil
