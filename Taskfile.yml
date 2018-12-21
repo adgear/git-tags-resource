@@ -3,6 +3,11 @@
 version: '2'
 
 tasks:
+  tag:
+    cmds:
+      - git tag -a {{.VERSION}}
+    vars:
+      VERSION: {sh: cat VERSION}
   build-rc:
     cmds:
       - docker build -t adgear/git-tags-resource:{{.VERSION}} .
