@@ -93,15 +93,12 @@ func TestCheckPublic_NoRepoName(t *testing.T) {
 		URI:       "https://github.com/concourse/concourse.git",
 		TagFilter: "*.*.*",
 	}
-	output := "[{\"msg\":\"repository_name can't be empty.\"}]"
 
 	cr, _ := NewCheckResource(gtsMock)
 
-	o, err := cr.Execute(source)
+	_, err := cr.Execute(source)
 
-	assert.Equal(t, output, o, "they should be equal")
-
-	assert.NoError(t, err)
+	assert.Errorf(t, err, "repository_name can't be empty.")
 }
 
 func TestCheckPublic_GitNoKey(t *testing.T) {
@@ -112,15 +109,12 @@ func TestCheckPublic_GitNoKey(t *testing.T) {
 		URI:            "git@github.com:concourse/concourse.git",
 		TagFilter:      "*.*.*",
 	}
-	output := "[{\"msg\":\"private_key is required for git repository over SSH.\"}]"
 
 	cr, _ := NewCheckResource(gtsMock)
 
-	o, err := cr.Execute(source)
+	_, err := cr.Execute(source)
 
-	assert.Equal(t, output, o, "they should be equal")
-
-	assert.NoError(t, err)
+	assert.Error(t, err, "private_key is required for git repository over SSH.")
 }
 
 func TestCheckPublic_NoTags(t *testing.T) {
@@ -193,7 +187,10 @@ func TestCheckPublic_DefaultValues(t *testing.T) {
 	setup(t)
 
 	source := utils.Source{
+		URI:            "git@github.com:concourse/concourse.git",
 		RepositoryName: "concourse/concourse",
+		PrivateKey:     "---",
+		TagFilter:      "*",
 	}
 	tagList := []string{"4.0.0", "4.2.1"}
 	tagsVersions, _ := utils.ConvertMatchingToSemver(tagList, source.TagFilter)
