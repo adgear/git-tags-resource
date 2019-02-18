@@ -18,15 +18,15 @@ tasks:
   cleanup:
     cmds:
       - for i in $(cat .cleanup); do docker rmi $i; done
-  ensure:
+  vendor:
     cmds:
-      - dep ensure
+      - go mod vendor
   test:
-    deps: [ensure]
+    deps: [vendor]
     cmds:
       - go test $(go list ./... | grep -v mocks) -cover -v
   build:
-    deps: [ensure]
+    deps: [vendor]
     cmds:
       - go build -ldflags "-X main.version=`cat VERSION`" .
   mockgen:
