@@ -1,3 +1,7 @@
+# DEPRECATED
+
+Use the git resource now that this is merged: https://github.com/concourse/git-resource/pull/225
+
 # Git Tags Resource
 
 Tracks github git tags (Annotated or Lightweight) regardless of the branch.
